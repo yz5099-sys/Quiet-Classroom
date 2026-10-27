@@ -1,15 +1,9 @@
 {
   "version": 2,
-  "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
   "headers": [
     {
       "source": "/(.*)",
-      "headers": [
-        { "key": "Permissions-Policy", "value": "microphone=(self)" }
-      ]
+      "headers": [{ "key": "Permissions-Policy", "value": "microphone=(self)" }]
     }
   ]
 }
