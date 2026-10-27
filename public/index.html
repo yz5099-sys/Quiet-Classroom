@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#44735c" />
-    <title>Quiet Classroom 自习静音守护</title>
+    <title>Quiet Classroom | A quieter place to focus</title>
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
@@ -14,19 +14,24 @@
         <div>
           <span class="eyebrow">A LITTLE QUIET GOES A LONG WAY</span>
           <h1>Quiet Classroom<span class="brand-dot">.</span></h1>
-          <p>让教室安静一点，小鱼才能安心睡觉。</p>
+          <p>A quieter room. A happier little fish.</p>
         </div>
         <div class="score-card">
-          <div class="score-label">✦ 安静能量</div>
+          <div class="score-label">✦ Quiet energy</div>
           <div class="score" id="score">0</div>
         </div>
       </header>
       <main class="layout">
-        <section class="scene-wrap" aria-label="小鱼休息的教室">
+        <section
+          class="scene-wrap"
+          aria-label="A classroom where a little fish rests"
+        >
           <div class="scene-heading">
             <span class="scene-kicker">YOUR QUIET CORNER</span>
-            <h2>给专注，留一点安静。</h2>
-            <p id="sceneCaption">小鱼正在休息，准备好就开始吧。</p>
+            <h2>Make room for focus.</h2>
+            <p id="sceneCaption">
+              Your fish is resting. Start when you are ready.
+            </p>
           </div>
           <div class="room" aria-hidden="true">
             <div class="window">
@@ -61,58 +66,61 @@
             </div>
           </div>
           <div class="scene-footer">
-            <span class="tiny-spark">✧</span> 一起守护小鱼的好梦
-            <span class="live-chip" id="sceneState">准备就绪</span>
+            <span class="tiny-spark">✧</span> Keep a little dream alive
+            <span class="live-chip" id="sceneState">Ready to begin</span>
           </div>
-          <div class="noise-alert" id="noiseAlert">太吵啦！小鱼被吵醒了</div>
+          <div class="noise-alert" id="noiseAlert">
+            A little loud! Your fish is awake.
+          </div>
         </section>
         <aside class="panel">
           <div class="panel-heading">
             <span class="eyebrow">STUDY SESSION</span>
-            <h2>开启专注时光</h2>
-            <p>设定节奏，把安静交给我们。</p>
+            <h2>Time to focus</h2>
+            <p>Set your pace. Find your quiet.</p>
           </div>
           <div class="field">
-            <label for="mode">模式</label
+            <label for="mode">Session mode</label
             ><select id="mode">
-              <option value="manual">手动开始 / 结束</option>
-              <option value="duration">按持续时长</option>
-              <option value="scheduled">按开始和结束时间</option>
+              <option value="manual">Manual start / end</option>
+              <option value="duration">Timed session</option>
+              <option value="scheduled">Scheduled session</option>
             </select>
           </div>
           <div class="field" id="durationField">
-            <label for="duration">持续时长（分钟）</label
+            <label for="duration">Duration (minutes)</label
             ><input id="duration" type="number" min="1" value="10" />
           </div>
           <div class="field" id="scheduleFields" style="display: none">
-            <label for="startTime">开始时间</label
+            <label for="startTime">Start time</label
             ><input id="startTime" type="time" /><label
               for="endTime"
               style="margin-top: 10px"
-              >结束时间</label
+              >End time</label
             ><input id="endTime" type="time" />
           </div>
           <div class="field">
             <label for="threshold"
-              >噪音阈值：<span id="thresholdText">38</span>%</label
+              >Noise threshold: <span id="thresholdText">38</span>%</label
             ><input id="threshold" type="range" min="10" max="90" value="38" />
           </div>
           <div class="buttons">
-            <button class="primary" id="startBtn">开始自习</button
-            ><button class="danger" id="stopBtn" disabled>结束</button
-            ><button class="secondary" id="resetBtn">重置</button>
+            <button class="primary" id="startBtn">Start session</button
+            ><button class="danger" id="stopBtn" disabled>End</button
+            ><button class="secondary" id="resetBtn">Reset</button>
           </div>
           <div class="status-pill" id="statusPill" role="status">
-            <span class="dot"></span><span id="statusText">等待开始</span>
+            <span class="dot"></span
+            ><span id="statusText">Waiting to begin</span>
           </div>
           <div class="volume-box">
             <div class="volume-label">
-              <span>环境音量</span><span id="volumeText">0%</span>
+              <span>Room volume</span><span id="volumeText">0%</span>
             </div>
             <div
               class="volume-track"
               role="meter"
-              aria-label="相对环境音量"
+              aria-label="Relative room volume"
               aria-valuemin="0"
               aria-valuemax="100"
               aria-valuenow="0"
@@ -123,25 +131,28 @@
           </div>
           <div class="stat-list">
             <div class="stat">
-              <span>本机时间</span><strong id="localClock">--:--:--</strong>
+              <span>Local time</span><strong id="localClock">--:--:--</strong>
             </div>
             <div class="stat">
-              <span>剩余时间</span><strong id="timeLeft">--:--</strong>
+              <span>Time remaining</span><strong id="timeLeft">--:--</strong>
             </div>
             <div class="stat">
-              <span>安静时长</span><strong id="quietTime">0s</strong>
+              <span>Quiet time</span><strong id="quietTime">0s</strong>
             </div>
             <div class="stat">
-              <span>连续安静最长</span><strong id="longestQuiet">0s</strong>
+              <span>Longest quiet streak</span
+              ><strong id="longestQuiet">0s</strong>
             </div>
             <div class="stat">
-              <span>惊醒次数</span><strong id="noiseEvents">0</strong>
+              <span>Wake-ups</span><strong id="noiseEvents">0</strong>
             </div>
           </div>
           <p class="hint">
-            声音仅在本机分析，不录音、不上传。音量为相对值，并非分贝；请根据环境调节阈值。<br />麦克风不可用时可体验演示，演示不计分。
+            Sound stays on your device. No recording or uploads. Levels are
+            relative, not decibels; adjust the threshold for your room.<br />No
+            microphone? Try the demo. Demo sessions do not earn points.
           </p>
-          <button class="demo-link" id="demoBtn">先体验一下演示 ↗</button>
+          <button class="demo-link" id="demoBtn">Try the demo first ↗</button>
         </aside>
       </main>
     </div>
@@ -154,24 +165,25 @@
       inert
     >
       <div class="result-card">
-        <h2 id="resultHeading">自习结束</h2>
-        <p>本轮安静挑战结果如下：</p>
-        <div class="badge" id="titleBadge">安静守护者</div>
+        <h2 id="resultHeading">Session complete</h2>
+        <p>Here is how your quiet session went.</p>
+        <div class="badge" id="titleBadge">Quiet Guardian</div>
         <div class="result-grid">
           <div class="result-item">
-            <strong id="finalScore">0</strong><span>总分</span>
+            <strong id="finalScore">0</strong><span>Total score</span>
           </div>
           <div class="result-item">
-            <strong id="finalQuiet">0s</strong><span>安静时长</span>
+            <strong id="finalQuiet">0s</strong><span>Quiet time</span>
           </div>
           <div class="result-item">
-            <strong id="finalLongest">0s</strong><span>最长连续安静</span>
+            <strong id="finalLongest">0s</strong
+            ><span>Longest quiet streak</span>
           </div>
           <div class="result-item">
-            <strong id="finalNoise">0</strong><span>惊醒次数</span>
+            <strong id="finalNoise">0</strong><span>Wake-ups</span>
           </div>
         </div>
-        <button class="primary" id="closeModalBtn">完成</button>
+        <button class="primary" id="closeModalBtn">Done</button>
       </div>
     </div>
     <script src="./script.js" defer></script>

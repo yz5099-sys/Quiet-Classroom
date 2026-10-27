@@ -1,7 +1,7 @@
 node_modules/
 .vercel/
 .DS_Store
-submission/rendered/
+submission/rendered*/
 submission/original.html
 submission/before.png
 submission/after-*.png

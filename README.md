@@ -1,6 +1,18 @@
+[Open Quiet Classroom](https://quiet-classroom.vercel.app/)
+
 # Quiet Classroom
 
 A gentle study companion: keep a little fish asleep by maintaining a quieter room. Built with plain HTML, CSS, and JavaScript. No frontend framework, build step, or runtime package installation is required.
+
+## How to play
+
+1. Open the live website above and choose Manual, Timed, or Scheduled mode.
+2. Set the duration or local start and end times if needed. Adjust the noise threshold to suit your room.
+3. Select **Start session** and allow microphone access. Stay quiet to let your fish sleep and earn points.
+4. Sustained sound wakes the fish and subtracts 25 points. Return to quiet to let it fall asleep again.
+5. Select **End** to view your score, quiet time, longest streak, and wake-ups. **Reset** clears the current session.
+
+Use **Try the demo first** to explore without a microphone. During a demo, **Simulate a sound** demonstrates the awake state. Demo sessions do not earn points.
 
 ## Run locally
 
@@ -17,7 +29,8 @@ Open http://localhost:3000 and allow microphone access. Production microphone ac
 - `index.html`: semantic interface and classroom illustration structure
 - `style.css`: responsive layout, day/night themes, aquarium and fish animation
 - `script.js`: microphone analysis, session scheduling, scoring, and results
-- `submission/Quiet_Classroom_Design_Reflection.docx`: English assignment reflection
+- [Design reflection and illustrated gameplay guide](submission/Quiet_Classroom_Design_Reflection.docx): English Word assignment with three screenshots
+- [Design screenshot gallery](design/README.md): five screenshots, including mobile and night views
 - `public/`: matching static entry for deployments configured to serve this directory
 - `server.mjs`: dependency-free local server
 

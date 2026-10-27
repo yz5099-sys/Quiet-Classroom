@@ -43,15 +43,15 @@ function updateControls() {
   const busy = state.phase !== 'idle';
   $('startBtn').disabled = busy;
   $('startBtn').textContent =
-    state.phase === 'requesting' ? '正在连接麦克风…' : '开始自习';
+    state.phase === 'requesting' ? 'Connecting microphone…' : 'Start session';
   $('stopBtn').disabled = !busy;
   $('stopBtn').textContent = ['scheduled', 'requesting'].includes(state.phase)
-    ? '取消'
-    : '结束';
+    ? 'Cancel'
+    : 'End';
   controls.forEach((id) => ($(id).disabled = busy));
   $('demoBtn').disabled = busy && !state.demo;
   $('demoBtn').textContent =
-    state.demo && busy ? '模拟一次声音 ↗' : '先体验一下演示 ↗';
+    state.demo && busy ? 'Simulate a sound ↗' : 'Try the demo first ↗';
 }
 function updateVolume(value) {
   $('volumeText').textContent = `${value}%`;
@@ -63,10 +63,10 @@ function setFish(awake) {
   $('zzz').classList.toggle('hide', awake);
   $('noiseAlert').classList.toggle('show', awake);
   $('sceneCaption').textContent = awake
-    ? '轻一点，小鱼听见我们的声音了。'
+    ? 'A little softer. Your fish can hear you.'
     : state.phase === 'running'
-      ? '做得很好，小鱼正安心地做梦。'
-      : '小鱼正在休息，准备好就开始吧。';
+      ? 'Lovely. Your fish is dreaming peacefully.'
+      : 'Your fish is resting. Start when you are ready.';
 }
 function renderStats() {
   $('score').textContent = Math.floor(state.score);
@@ -75,11 +75,11 @@ function renderStats() {
   $('noiseEvents').textContent = state.events;
   $('timeLeft').textContent =
     state.phase === 'scheduled'
-      ? `${formatTime((state.startAt - Date.now()) / 1000)} 后开始`
+      ? `${formatTime((state.startAt - Date.now()) / 1000)} until start`
       : state.phase === 'running'
         ? state.endAt
           ? formatTime((state.endAt - Date.now()) / 1000)
-          : '手动模式'
+          : 'Manual session'
         : '--:--';
 }
 function applyTimeTheme() {
@@ -93,13 +93,13 @@ function applyTimeTheme() {
         ? 'afternoon'
         : 'night',
   );
-  $('localClock').textContent = now.toLocaleTimeString('zh-CN', {
+  $('localClock').textContent = now.toLocaleTimeString('en-US', {
     hour12: false,
   });
 }
 function todayAt(value, now) {
   if (!/^\d{2}:\d{2}$/.test(value))
-    throw new Error('请设置完整的开始和结束时间。');
+    throw new Error('Please set both a start and an end time.');
   const [h, m] = value.split(':').map(Number);
   const date = new Date(now);
   date.setHours(h, m, 0, 0);
@@ -110,11 +110,11 @@ function sessionPlan(now = Date.now()) {
   if ($('mode').value === 'duration') {
     const minutes = Number($('duration').value);
     if (!Number.isFinite(minutes) || minutes < 1 || minutes > 1440)
-      throw new Error('请填写 1 到 1440 分钟的有效时长。');
+      throw new Error('Enter a duration from 1 to 1440 minutes.');
     return { start: now, end: now + minutes * 60000 };
   }
   if ($('startTime').value === $('endTime').value)
-    throw new Error('开始与结束时间不能相同。');
+    throw new Error('Start and end times must be different.');
   let start = todayAt($('startTime').value, now),
     end = todayAt($('endTime').value, now);
   const crossesMidnight = end < start;
@@ -129,7 +129,7 @@ function sessionPlan(now = Date.now()) {
       end = d.getTime();
     }
   } else if (now >= end) {
-    throw new Error('今天的预约时段已经结束，请选择稍后的时间。');
+    throw new Error('That time slot has ended. Choose a later time today.');
   }
   return { start: Math.max(start, now), end };
 }
@@ -156,7 +156,9 @@ function releaseAudio() {
 }
 async function setupAudio(token) {
   if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia)
-    throw new Error('麦克风需要 HTTPS 或 localhost。你也可以先体验演示。');
+    throw new Error(
+      'Microphone access needs HTTPS or localhost. You can also try the demo.',
+    );
   const stream = await navigator.mediaDevices.getUserMedia({
     audio: {
       echoCancellation: false,
@@ -170,7 +172,10 @@ async function setupAudio(token) {
   }
   state.stream = stream;
   const Audio = window.AudioContext || window.webkitAudioContext;
-  if (!Audio) throw new Error('当前浏览器不支持声音分析，请使用新版浏览器。');
+  if (!Audio)
+    throw new Error(
+      'This browser cannot analyze sound. Please use an up-to-date browser.',
+    );
   const context = new Audio();
   state.audioContext = context;
   if (context.state === 'suspended') await context.resume();
@@ -183,7 +188,7 @@ async function setupAudio(token) {
     track.addEventListener('ended', () => {
       if (state.stream === stream && state.phase !== 'idle') {
         stopSession(false);
-        setStatus('麦克风已断开，请重新开始。', true);
+        setStatus('Microphone disconnected. Please start again.', true);
       }
     }),
   );
@@ -202,22 +207,24 @@ async function startSession(demo = false) {
   state.phase = 'requesting';
   state.demo = demo;
   updateControls();
-  setStatus(demo ? '正在准备演示…' : '请允许麦克风访问…');
+  setStatus(demo ? 'Preparing the demo…' : 'Please allow microphone access…');
   try {
     if (!demo && !(await setupAudio(token))) return;
     if (token !== state.generation) return;
     // Duration sessions start after permission, not while the permission dialog is open.
     if ($('mode').value === 'duration') plan = sessionPlan();
     if (plan.end && plan.end <= Date.now())
-      throw new Error('预约时段已经结束，请重新设置。');
+      throw new Error(
+        'Your scheduled time has ended. Please choose another time.',
+      );
     clearData();
     state.endAt = plan.end;
     state.startAt = plan.start;
     if (plan.start > Date.now()) {
       state.phase = 'scheduled';
       state.stream?.getTracks().forEach((track) => (track.enabled = false));
-      setStatus('预约已就绪，请保持页面打开');
-      $('sceneState').textContent = '已预约';
+      setStatus('Session scheduled. Keep this page open.');
+      $('sceneState').textContent = 'Scheduled';
     } else activateSession();
     state.watchdog = setInterval(() => {
       if (token !== state.generation) return;
@@ -236,10 +243,12 @@ async function startSession(demo = false) {
     stopSession(false);
     const message =
       error.name === 'NotAllowedError'
-        ? '麦克风未授权。请允许访问，或点击下方演示。'
+        ? 'Microphone access denied. Allow access or try the demo below.'
         : error.name === 'NotFoundError'
-          ? '未找到麦克风。请连接设备，或体验演示。'
-          : error.message;
+          ? 'No microphone found. Connect a device or try the demo.'
+          : error.name === 'Error'
+            ? error.message
+            : 'Unable to access the microphone. Check your device and browser permissions, or try the demo.';
     setStatus(message, true);
   }
 }
@@ -247,8 +256,14 @@ function activateSession() {
   state.phase = 'running';
   state.lastFrame = null;
   state.stream?.getTracks().forEach((track) => (track.enabled = true));
-  $('sceneState').textContent = state.demo ? '演示 · 不计分' : '正在守护';
-  setStatus(state.demo ? '演示模式 · 模拟音量 · 不计分' : '安静守护中');
+  $('sceneState').textContent = state.demo
+    ? 'Demo · No points'
+    : 'Keeping quiet';
+  setStatus(
+    state.demo
+      ? 'Demo · Simulated sound · No points'
+      : 'Quiet time in progress',
+  );
   setFish(false);
   updateControls();
   startAudioLoop();
@@ -268,7 +283,9 @@ function checkNoise(volume, now) {
       setFish(true);
     }
     setStatus(
-      state.demo ? '演示 · 小鱼被模拟声音唤醒' : '声音有点大，小鱼醒来了',
+      state.demo
+        ? 'Demo · Simulated sound woke your fish'
+        : 'A little loud. Your fish is awake.',
       true,
     );
   } else {
@@ -282,10 +299,10 @@ function checkNoise(volume, now) {
     } else state.quietSince = null;
     setStatus(
       state.demo
-        ? '演示模式 · 模拟音量 · 不计分'
+        ? 'Demo · Simulated sound · No points'
         : state.noisy
-          ? '正在恢复安静…'
-          : '安静守护中',
+          ? 'Settling back into quiet…'
+          : 'Quiet time in progress',
       state.noisy,
     );
   }
@@ -309,7 +326,7 @@ function startAudioLoop() {
       state.streak = 0;
       state.overSince = state.quietSince = null;
       updateVolume(0);
-      setStatus('声音检测已暂停，请点击页面恢复');
+      setStatus('Sound detection paused. Click the page to resume.');
       state.frame = requestAnimationFrame(loop);
       return;
     }
@@ -361,8 +378,8 @@ function stopSession(show = true) {
   updateControls();
   updateVolume(0);
   renderStats();
-  $('sceneState').textContent = '准备就绪';
-  setStatus('已结束 · 麦克风已释放');
+  $('sceneState').textContent = 'Ready to begin';
+  setStatus('Session ended · Microphone released');
   if (show && wasRunning) showResult();
 }
 function resetAll() {
@@ -370,7 +387,7 @@ function resetAll() {
   stopSession(false);
   clearData();
   renderStats();
-  setStatus('等待开始');
+  setStatus('Waiting to begin');
 }
 function showResult() {
   $('finalScore').textContent = Math.floor(state.score);
@@ -378,16 +395,16 @@ function showResult() {
   $('finalLongest').textContent = formatSeconds(state.longest);
   $('finalNoise').textContent = state.events;
   $('titleBadge').textContent = state.demo
-    ? '演示结束 · 不计入成绩'
+    ? 'Demo complete · No points awarded'
     : state.score >= 800 && state.events <= 1
-      ? '静音之神'
+      ? 'Master of Quiet'
       : state.score >= 500
-        ? '自习大师'
+        ? 'Focus Champion'
         : state.score >= 220
-          ? '安静守护者'
+          ? 'Quiet Guardian'
           : state.score >= 80
-            ? '安静小队'
-            : '每一刻安静都值得';
+            ? 'Quiet Crew'
+            : 'Every quiet moment counts';
   previousFocus = document.activeElement;
   document.querySelector('.app').inert = true;
   $('resultModal').inert = false;

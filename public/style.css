@@ -1540,3 +1540,36 @@ button:focus-visible {
     right: 9%;
   }
 }
+
+/* Allow longer English labels to wrap comfortably on smaller screens. */
+.status-pill {
+  line-height: 1.5;
+  text-align: center;
+  min-height: 36px;
+}
+.status-pill .dot {
+  flex-shrink: 0;
+}
+.scene-heading p {
+  max-width: calc(100vw - 90px);
+}
+@media (max-width: 520px) {
+  header p {
+    max-width: 210px;
+  }
+  .scene-heading h2 {
+    font-size: 23px;
+  }
+  .scene-footer {
+    gap: 5px;
+  }
+  .live-chip {
+    flex-shrink: 0;
+  }
+  .score-card {
+    min-width: 93px;
+  }
+  .score-label {
+    font-size: 9px;
+  }
+}
