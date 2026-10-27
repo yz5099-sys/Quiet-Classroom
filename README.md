@@ -29,7 +29,7 @@ Open http://localhost:3000 and allow microphone access. Production microphone ac
 - `index.html`: semantic interface and classroom illustration structure
 - `style.css`: responsive layout, day/night themes, aquarium and fish animation
 - `script.js`: microphone analysis, session scheduling, scoring, and results
-- [Design reflection and illustrated gameplay guide](submission/Quiet_Classroom_Design_Reflection.docx): English Word assignment with three screenshots
+- [Design reflection and illustrated gameplay guide](design/Quiet_Classroom_Design_With_Screenshots_and_Gameplay.docx): English Word assignment with three screenshots
 - [Design screenshot gallery](design/README.md): five screenshots, including mobile and night views
 - `public/`: matching static entry for deployments configured to serve this directory
 - `server.mjs`: dependency-free local server

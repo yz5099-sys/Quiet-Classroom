@@ -79,3 +79,5 @@ D.add_paragraph('Select Done to close the summary and start again. Screenshots u
 
 D.core_properties.title='Quiet Classroom Interactive Web Design Reflection';D.core_properties.author='';D.core_properties.subject='Design intentions and AI assisted development'
 D.save(out/'Quiet_Classroom_Design_Reflection.docx')
+
+D.save(out.parent/'design'/'Quiet_Classroom_Design_With_Screenshots_and_Gameplay.docx')

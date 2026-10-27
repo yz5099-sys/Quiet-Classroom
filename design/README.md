@@ -1,6 +1,6 @@
 # Quiet Classroom design and gameplay
 
-[Open the live website](https://quiet-classroom.vercel.app/) · [Download the design reflection and illustrated gameplay guide](../submission/Quiet_Classroom_Design_Reflection.docx)
+[Open the live website](https://quiet-classroom.vercel.app/) · [Download the design reflection and illustrated gameplay guide](Quiet_Classroom_Design_With_Screenshots_and_Gameplay.docx)
 
 The Word document includes the design intentions, AI reflection, repository and live website links, three interface screenshots, and a How to play section. This folder contains five screenshots of the implemented English interface. They are screenshots, not early hand-drawn sketches. Sound-response and result views were captured with controlled microphone test input; no classroom audio was recorded.
 
